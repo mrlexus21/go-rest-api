@@ -36,12 +36,12 @@ type Logger struct {
 	*logrus.Entry
 }
 
-func GetLogger() Logger {
-	return Logger{e}
+func GetLogger() *Logger {
+	return &Logger{e}
 }
 
-func (l *Logger) GetLoggerWithField(k string, v interface{}) Logger {
-	return Logger{l.WithField(k, v)}
+func (l *Logger) GetLoggerWithField(k string, v interface{}) *Logger {
+	return &Logger{l.WithField(k, v)}
 }
 
 func init() {
@@ -55,6 +55,9 @@ func init() {
 		DisableColors: false,
 		FullTimestamp: true,
 	}
+
+	_ = os.RemoveAll("logs")
+	_ = os.Remove("logs")
 
 	err := os.Mkdir("logs", 0644)
 	if err != nil {
