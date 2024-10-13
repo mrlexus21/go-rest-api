@@ -2,18 +2,19 @@ package main
 
 import (
 	"github.com/julienschmidt/httprouter"
-	"log"
 	"net"
 	"net/http"
 	"rest_api/internal/user"
+	"rest_api/pkg/logging"
 	"time"
 )
 
 func main() {
-	log.Println("create router")
+	logger := logging.GetLogger()
+	logger.Info("create router")
 	router := httprouter.New()
 
-	log.Println("register user handler")
+	logger.Info("register user handler")
 	handler := user.NewHandler()
 	handler.Register(router)
 
@@ -21,7 +22,8 @@ func main() {
 }
 
 func start(router *httprouter.Router) {
-	log.Println("start application")
+	logger := logging.GetLogger()
+	logger.Info("start application")
 	listener, err := net.Listen("tcp", "0.0.0.0:1234")
 	if err != nil {
 		panic(err)
@@ -31,6 +33,6 @@ func start(router *httprouter.Router) {
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
-	log.Println("server is listening port 0.0.0.0:1234")
-	log.Fatalln(server.Serve(listener))
+	logger.Info("server is listening port 0.0.0.0:1234")
+	logger.Fatal(server.Serve(listener))
 }
