@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"net"
@@ -10,6 +11,8 @@ import (
 	"path/filepath"
 	"rest_api/internal/config"
 	"rest_api/internal/user"
+	"rest_api/internal/user/db"
+	"rest_api/pkg/client/mongodb"
 	"rest_api/pkg/logging"
 	"time"
 )
@@ -20,6 +23,70 @@ func main() {
 	router := httprouter.New()
 
 	cfg := config.GetConfig()
+
+	cfgMongo := cfg.MongoDb
+	mongoDBClient, err := mongodb.NewClient(
+		context.Background(),
+		cfgMongo.Host,
+		cfgMongo.Port,
+		cfgMongo.Username,
+		cfgMongo.Password,
+		cfgMongo.Database,
+		cfgMongo.AuthDB,
+	)
+	if err != nil {
+		panic(err)
+	}
+	storage := db.NewStorage(mongoDBClient, cfgMongo.Collection, logger)
+
+	/*user1 := user.User{
+		ID:           "",
+		Email:        "theartdevel@gmail.com",
+		Username:     "theartofdevel",
+		PasswordHash: "12345",
+	}
+	user1ID, err := storage.Create(context.Background(), user1)
+	if err != nil {
+		panic(err)
+	}
+	logger.Info(user1ID)
+
+	user2 := user.User{
+		ID:           "",
+		Email:        "more@mail.here",
+		Username:     "moremail",
+		PasswordHash: "54321",
+	}
+	user2ID, err := storage.Create(context.Background(), user2)
+	if err != nil {
+		panic(err)
+	}
+	logger.Info(user2ID)
+
+	user2Found, err := storage.FindOne(context.Background(), user2ID)
+	if err != nil {
+		panic(err)
+	}
+	logger.Info(user2Found)
+
+	user2Found.Email = "newEmail@here.ok"
+	err = storage.Update(context.Background(), user2Found)
+	if err != nil {
+		panic(err)
+	}
+
+	err = storage.Delete(context.Background(), user2ID)
+	if err != nil {
+		panic(err)
+	}
+
+	_, err = storage.FindOne(context.Background(), user2ID)
+	if err != nil {
+		panic(err)
+	}
+
+	users, err := storage.FindAll(context.Background())
+	fmt.Println(users)*/
 
 	logger.Info("register user handler")
 	handler := user.NewHandler(logger)
