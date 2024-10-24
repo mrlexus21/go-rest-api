@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"net"
@@ -11,8 +10,6 @@ import (
 	"path/filepath"
 	"rest_api/internal/config"
 	"rest_api/internal/user"
-	"rest_api/internal/user/db"
-	"rest_api/pkg/client/mongodb"
 	"rest_api/pkg/logging"
 	"time"
 )
@@ -24,7 +21,7 @@ func main() {
 
 	cfg := config.GetConfig()
 
-	cfgMongo := cfg.MongoDb
+	/*cfgMongo := cfg.MongoDb
 	mongoDBClient, err := mongodb.NewClient(
 		context.Background(),
 		cfgMongo.Host,
@@ -37,7 +34,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	storage := db.NewStorage(mongoDBClient, cfgMongo.Collection, logger)
+	storage := db.NewStorage(mongoDBClient, cfgMongo.Collection, logger)*/
 
 	/*user1 := user.User{
 		ID:           "",
