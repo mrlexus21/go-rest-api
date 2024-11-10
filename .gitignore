@@ -1,2 +1,16 @@
 /logs/
 app.sock
+
+# OS
+.DS_Store
+# IDE
+.idea
+.vscode
+# Binary
+/bin
+# Profiling
+*.out
+# Env
+.env
+# Lint config
+.golangci.yml
